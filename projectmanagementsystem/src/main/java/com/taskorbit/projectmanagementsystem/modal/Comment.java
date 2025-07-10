@@ -19,7 +19,9 @@ public class Comment {
 
     private String content;
 
+    @Column(columnDefinition = "DATETIME")
     private LocalDateTime createdDateTime;
+
 
     @ManyToOne
     private User user;
