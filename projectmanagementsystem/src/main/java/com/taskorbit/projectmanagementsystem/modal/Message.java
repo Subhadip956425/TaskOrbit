@@ -20,7 +20,9 @@ public class Message {
 
     private String content;
 
+    @Column(columnDefinition = "DATETIME")
     private LocalDateTime createdAt;
+
 
     @ManyToOne
     private Chat chat;
