@@ -44,6 +44,7 @@ public class AppConfig {
                         "http://localhost:3000",
                         "http://localhost:5173",
                         "http://localhost:4200"
+                        "https://task-orbit-eosin.vercel.app"
                 ));
 //                cfg.setAllowedMethods(Collections.singletonList("*"));
                 cfg.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")); // Don't use "*"
