@@ -56,7 +56,7 @@ const IssueCard = ({ item, projectId }) => {
             </CardTitle>
 
             <DropdownMenu>
-              <DropdownMenuTrigger>
+              <DropdownMenuTrigger asChild>
                 <Button className="rounded-full" size="icon" variant="ghost">
                   <DotsVerticalIcon />
                 </Button>
@@ -87,7 +87,7 @@ const IssueCard = ({ item, projectId }) => {
           <div className="flex items-center justify-between">
             <p>FBP - {1}</p>
             <DropdownMenu className="w-[30rem] border border-red-400">
-              <DropdownMenuTrigger>
+              <DropdownMenuTrigger asChild>
                 <Button
                   size="icon"
                   className="bg-gray-900 hover:text-black text-white rounded-full"
