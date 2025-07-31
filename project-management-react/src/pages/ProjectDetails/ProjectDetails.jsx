@@ -57,8 +57,8 @@ const ProjectDetails = () => {
                   </div>
 
                   <Dialog>
-                    <DialogTrigger>
-                      <DialogClose>
+                    <DialogTrigger asChild>
+                      <DialogClose asChild>
                         <Button
                           size="sm"
                           variant="outline"
