@@ -28,6 +28,9 @@ const IssueDetails = () => {
       return;
     }
 
+    dispatch(updateIssueStatus({ status, id: issueId, projectId }));
+  };
+
   useEffect(() => {
     dispatch(fetchIssueById(issueId));
     dispatch(fetchComments(issueId));
