@@ -11,9 +11,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { useDispatch } from "react-redux";
 import { register } from "../Redux/Auth/Action";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -26,7 +28,9 @@ const Signup = () => {
   });
 
   const onSubmit = (data) => {
-    dispatch(register(data, setErrorMessage, setSuccessMessage));
+    dispatch(register(data, setErrorMessage, setSuccessMessage)).then(() => {
+      navigate("/"); // ✅ redirect to home page
+    });
   };
 
   useEffect(() => {
