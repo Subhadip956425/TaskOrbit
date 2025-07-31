@@ -94,7 +94,7 @@ const ChatBox = () => {
 
         <div className="relative p-0">
           <Input
-            placeHolder="type message..."
+            placeholder="type message..."
             className="py-7 border-t outline-none focus:outline-none focus:ring-0 rounded-none border-b-0 border-x-0"
             value={message}
             onChange={handleMessageChange}
