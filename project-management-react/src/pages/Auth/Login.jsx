@@ -11,9 +11,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { useDispatch } from "react-redux";
 import { login } from "../Redux/Auth/Action";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -25,7 +27,9 @@ const Login = () => {
   });
 
   const onSubmit = (data) => {
-    dispatch(login(data, setErrorMessage, setSuccessMessage));
+    dispatch(login(data, setErrorMessage, setSuccessMessage)).then(() => {
+      navigate("/"); // ✅ redirect to home page
+    });
   };
 
   useEffect(() => {
