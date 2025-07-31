@@ -3,6 +3,7 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
+  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import React from "react";
@@ -34,11 +35,13 @@ const Navbar = () => {
           TaskOrbit
         </p>
         <Dialog>
-          <DialogTrigger>
+          <DialogTrigger asChild>
             <Button variant="ghost">New Project</Button>
           </DialogTrigger>
           <DialogContent>
-            <DialogHeader><DialogTitle>Create New Project</DialogTitle></DialogHeader>
+            <DialogHeader>
+              <DialogTitle>Create New Project</DialogTitle>
+            </DialogHeader>
             <CreateProjectForm />
           </DialogContent>
         </Dialog>
@@ -49,7 +52,7 @@ const Navbar = () => {
 
       <div className="flex gap-3 items-center">
         <DropdownMenu>
-          <DropdownMenuTrigger>
+          <DropdownMenuTrigger asChild>
             <Button
               variant="outline"
               size="icon"
