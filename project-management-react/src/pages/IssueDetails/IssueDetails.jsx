@@ -23,9 +23,10 @@ const IssueDetails = () => {
   const { issue, comment } = useSelector((store) => store);
 
   const handleUpdateIssueStatus = (status) => {
-    dispatch(updateIssueStatus({ status, id: issueId }));
-    console.log(status);
-  };
+    if (!projectId || !issueId) {
+      console.warn("Missing projectId or issueId in updateIssueStatus");
+      return;
+    }
 
   useEffect(() => {
     dispatch(fetchIssueById(issueId));
