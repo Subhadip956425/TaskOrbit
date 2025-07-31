@@ -38,7 +38,7 @@ const Navbar = () => {
             <Button variant="ghost">New Project</Button>
           </DialogTrigger>
           <DialogContent>
-            <DialogHeader>Create New Project</DialogHeader>
+            <DialogHeader><DialogTitle>Create New Project</DialogTitle></DialogHeader>
             <CreateProjectForm />
           </DialogContent>
         </Dialog>
