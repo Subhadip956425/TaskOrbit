@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { DialogClose } from "@/components/ui/dialog";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -24,9 +24,35 @@ const InviteUserForm = () => {
     },
   });
 
-  const onSubmit = (data) => {
-    dispatch(inviteToProject({ email: data.email, projectId: id }));
-    console.log("Create project data", data);
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState(null); // "success" | "error"
+  const [loading, setLoading] = useState(false); // loading button
+
+  const onSubmit = async (data) => {
+    setLoading(true);
+    setMessage("");
+    setStatus(null);
+
+    try {
+      const res = await dispatch(
+        inviteToProject({ email: data.email, projectId: id })
+      );
+
+      if (res?.message === "User invitation sent successfully") {
+        setStatus("success");
+        setMessage("User invited successfully!");
+        form.reset(); // clear input
+      } else {
+        // if some other response comes back
+        setStatus("error");
+        setMessage("Something went wrong. Please try again.");
+      }
+    } catch (err) {
+      setStatus("error");
+      setMessage("User not found or already invited.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -41,7 +67,7 @@ const InviteUserForm = () => {
                 <FormControl>
                   <Input
                     {...field}
-                    type="text"
+                    type="email"
                     className="border w-full border-gray-700 py-5 px-5"
                     placeholder="user email..."
                   />
@@ -51,11 +77,19 @@ const InviteUserForm = () => {
             )}
           />
 
-          <DialogClose>
-            <Button type="submit" className="w-full mt-5">
-              Invite User
-            </Button>
-          </DialogClose>
+          {message && (
+            <p
+              className={`text-sm font-medium ${
+                status === "success" ? "text-green-600" : "text-red-600"
+              }`}
+            >
+              {message}
+            </p>
+          )}
+
+          <Button type="submit" className="w-full mt-5" disabled={loading}>
+            {loading ? "Inviting..." : "Invite User"}
+          </Button>
         </form>
       </Form>
     </div>

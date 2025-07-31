@@ -19,7 +19,7 @@ public class Comment {
 
     private String content;
 
-    @Column(columnDefinition = "DATETIME")
+//    @Column(columnDefinition = "DATETIME")
     private LocalDateTime createdDateTime;
 
 

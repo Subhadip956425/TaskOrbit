@@ -25,7 +25,11 @@ public class JwtProvider {
 
         jwt=jwt.substring(7);
 
-        Claims claims = Jwts.parser().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
+        Claims claims = Jwts.parser()
+                .verifyWith(key)           // ✅ New verification method
+                .build()
+                .parseSignedClaims(jwt)    // ✅ Replaces deprecated parseClaimsJws()
+                .getPayload();
 
         return String.valueOf(claims.get("email"));
     }

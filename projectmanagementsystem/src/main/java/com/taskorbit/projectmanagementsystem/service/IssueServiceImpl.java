@@ -45,7 +45,9 @@ public class IssueServiceImpl implements IssueService{
         issue.setTitle(issueRequest.getTitle());
         issue.setDescription(issueRequest.getDescription());
         issue.setStatus(issueRequest.getStatus());
-        issue.setProjectID(issue.getProjectID());
+//        issue.setProjectID(issue.getProjectID());
+        issue.setProjectID(issueRequest.getProjectId());
+        issue.setCreatedBy(user);
 //        issue.setProject(project);
         issue.setPriority(issueRequest.getPriority());
         issue.setDueDate(issueRequest.getDueDate());
@@ -77,4 +79,30 @@ public class IssueServiceImpl implements IssueService{
 
         return issueRepository.save(issue);
     }
+
+    public Issue updateIssue(Long issueId, IssueRequest issueRequest, Long userId) throws Exception {
+        Issue existingIssue = getIssueById(issueId);
+
+//        if (!existingIssue.getCreatedBy().getId().equals(userId)) {
+//            throw new Exception("Unauthorized to update this issue.");
+//        }
+
+        if (!existingIssue.getCreatedBy().getId().equals(userId) &&
+                (existingIssue.getAssignee() == null || !existingIssue.getAssignee().getId().equals(userId))) {
+            throw new Exception("Unauthorized to update this issue.");
+        }
+
+
+        existingIssue.setTitle(issueRequest.getTitle());
+        existingIssue.setDescription(issueRequest.getDescription());
+//        existingIssue.setPriority(issueRequest.getPriority());
+//        existingIssue.setDueDate(issueRequest.getDueDate());
+        existingIssue.setStatus(issueRequest.getStatus());
+//        existingIssue.setTags(issueRequest.getTags());
+        // Update other fields as necessary
+
+
+        return issueRepository.save(existingIssue);
+    }
+
 }

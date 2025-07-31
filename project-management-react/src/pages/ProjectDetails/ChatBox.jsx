@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,12 +18,14 @@ const ChatBox = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(fetchChatByProject(id));
-  }, []);
+  const scrollRef = useRef();
 
   useEffect(() => {
-    dispatch(fetchChatMessages(chat.chat?.id));
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chat.messages]);
+
+  useEffect(() => {
+    dispatch(fetchChatByProject(id));
   }, []);
 
   const handleSendMessage = () => {
@@ -48,18 +50,24 @@ const ChatBox = () => {
     if (chat.chat?.id) {
       dispatch(fetchChatMessages(chat.chat.id));
     }
-  }, [chat.chat?.id]); 
+  }, [chat.chat?.id]);
 
   return (
     <div className="sticky">
       <div className="border rounded-lg">
         <h1 className="border-b p-5">Chat Box</h1>
-        <ScrollArea className="h-[32rem] w-full p-5 flex gap-3 flex-col">
-          {chat.messages?.map((item, index) =>
-            item.sender.id !== auth.user.id ? (
-              <div className="flex gap-2 mb-2 justify-start" key={item}>
+        <ScrollArea className="h-[32rem] w-full p-5 flex gap-3 flex-col scroll-smooth">
+          {chat.messages?.map((item, index) => {
+            const isLastMessage = index === chat.messages.length - 1;
+
+            return item.sender.id !== auth.user.id ? (
+              <div
+                className="flex gap-2 mb-2 justify-start"
+                key={item.id || index}
+                ref={isLastMessage ? scrollRef : null}
+              >
                 <Avatar>
-                  <AvatarFallback>R</AvatarFallback>
+                  <AvatarFallback>{item.sender.fullName[0]}</AvatarFallback>
                 </Avatar>
                 <div className="space-y-2 py-2 px-5 border rounded-ss-2xl rounded-e-xl">
                   <p>{item.sender.fullName}</p>
@@ -67,7 +75,11 @@ const ChatBox = () => {
                 </div>
               </div>
             ) : (
-              <div className="flex gap-2 mb-2 justify-end" key={item}>
+              <div
+                className="flex gap-2 mb-2 justify-end"
+                key={item.id || index}
+                ref={isLastMessage ? scrollRef : null}
+              >
                 <div className="space-y-2 py-2 px-5 border rounded-se-2xl rounded-s-xl">
                   <p>{item.sender.fullName}</p>
                   <p className="text-gray-300">{item.content}</p>
@@ -76,8 +88,8 @@ const ChatBox = () => {
                   <AvatarFallback>{item.sender.fullName[0]}</AvatarFallback>
                 </Avatar>
               </div>
-            )
-          )}
+            );
+          })}
         </ScrollArea>
 
         <div className="relative p-0">

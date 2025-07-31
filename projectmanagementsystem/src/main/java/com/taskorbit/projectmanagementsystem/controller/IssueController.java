@@ -80,4 +80,12 @@ public class IssueController {
 
         return ResponseEntity.ok(issue);
     }
+
+    @PutMapping("/{issueId}")
+    public ResponseEntity<Issue> updateIssue(@PathVariable Long issueId, @RequestBody IssueRequest issueRequest, @RequestHeader("Authorization") String token) throws Exception {
+        User user = userService.findUserProfileByJwt(token);
+        Issue updatedIssue = issueService.updateIssue(issueId, issueRequest, user.getId());
+        return ResponseEntity.ok(updatedIssue);
+    }
+
 }

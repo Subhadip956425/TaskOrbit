@@ -1,0 +1,16 @@
+export const tags = [
+  "all",
+  "javascript",
+  "react",
+  "next-js",
+  "node-js",
+  "spring boot",
+  "mysql",
+  "postgesql",
+  "mongodb",
+  "angular",
+  "python",
+  "flask",
+  "django",
+  "docker",
+];

@@ -23,4 +23,6 @@ public class Invitation {
     private String email;
 
     private Long projectId;
+
+    private boolean accepted = false;
 }

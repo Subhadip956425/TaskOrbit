@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { DialogClose } from "@/components/ui/dialog";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -15,6 +14,8 @@ import { login } from "../Redux/Auth/Action";
 
 const Login = () => {
   const dispatch = useDispatch();
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const form = useForm({
     defaultValues: {
@@ -24,9 +25,18 @@ const Login = () => {
   });
 
   const onSubmit = (data) => {
-    dispatch(login(data));
-    console.log("Login project data", data);
+    dispatch(login(data, setErrorMessage, setSuccessMessage));
   };
+
+  useEffect(() => {
+    if (errorMessage || successMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage("");
+        setSuccessMessage("");
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage, successMessage]);
 
   return (
     <div className="space-y-5">
@@ -34,11 +44,23 @@ const Login = () => {
         Login
       </h1>
 
+      {errorMessage && (
+        <div className="text-red-500 text-center font-medium">
+          {errorMessage}
+        </div>
+      )}
+      {successMessage && (
+        <div className="text-green-500 text-center font-medium">
+          {successMessage}
+        </div>
+      )}
+
       <Form {...form}>
         <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
             control={form.control}
             name="email"
+            rules={{ required: "Email is required" }}
             render={({ field }) => (
               <FormItem>
                 <FormControl>
@@ -57,6 +79,7 @@ const Login = () => {
           <FormField
             control={form.control}
             name="password"
+            rules={{ required: "Password is required" }}
             render={({ field }) => (
               <FormItem>
                 <FormControl>

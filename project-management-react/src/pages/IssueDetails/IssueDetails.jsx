@@ -127,7 +127,7 @@ const IssueDetails = () => {
                 </div>
 
                 <div className="flex gap-10 items-center">
-                  <p className="w-[7rem]">Reporter</p>
+                  <p className="w-[7rem]">Owner</p>
                   <div className="flex items-center gap-3">
                     <Avatar className="h-8 w-8 text-xs">
                       <AvatarFallback>R</AvatarFallback>

@@ -68,6 +68,15 @@ export const issueReducer = (state = initialState, action) => {
         error: action.error,
       };
 
+    case actionTypes.UPDATE_ISSUE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        issues: state.issues.map((issue) =>
+          issue.id === action.issue.id ? action.issue : issue
+        ),
+      };
+
     default:
       return state;
   }

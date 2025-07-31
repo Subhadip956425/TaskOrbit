@@ -39,16 +39,37 @@ export const fetchIssueById = (id) => {
   };
 };
 
-export const updateIssueStatus = ({ id, status }) => {
+// export const updateIssueStatus = ({ id, status }) => {
+//   return async (dispatch) => {
+//     dispatch({ type: actionTypes.UPDATE_ISSUE_STATUS_REQUEST });
+//     try {
+//       const response = await api.put(`/api/issues/${id}/status/${status}`);
+//       console.log("update issue status", response.data);
+//       dispatch({
+//         type: actionTypes.UPDATE_ISSUE_STATUS_SUCCESS,
+//         issue: response.data,
+//       });
+//     } catch (error) {
+//       dispatch({
+//         type: actionTypes.UPDATE_ISSUE_STATUS_FAILURE,
+//         error: error.message,
+//       });
+//     }
+//   };
+// };
+
+export const updateIssueStatus = ({ id, status, projectId }) => {
   return async (dispatch) => {
     dispatch({ type: actionTypes.UPDATE_ISSUE_STATUS_REQUEST });
     try {
       const response = await api.put(`/api/issues/${id}/status/${status}`);
-      console.log("update issue status", response.data);
       dispatch({
         type: actionTypes.UPDATE_ISSUE_STATUS_SUCCESS,
         issue: response.data,
       });
+
+      // Re-fetch updated issue list for this project
+      dispatch(fetchIssues(projectId));
     } catch (error) {
       dispatch({
         type: actionTypes.UPDATE_ISSUE_STATUS_FAILURE,
@@ -58,18 +79,41 @@ export const updateIssueStatus = ({ id, status }) => {
   };
 };
 
-export const assignedUserToIssue = ({ issueId, userId }) => {
+// export const assignedUserToIssue = ({ issueId, userId }) => {
+//   return async (dispatch) => {
+//     dispatch({ type: actionTypes.ASSIGNED_ISSUE_TO_USER_REQUEST });
+//     try {
+//       const response = await api.put(
+//         `/api/issues/${issueId}/assignee/${userId}`
+//       );
+//       console.log("assigned issue", response.data);
+//       dispatch({
+//         type: actionTypes.ASSIGNED_ISSUE_TO_USER_SUCCESS,
+//         issue: response.data,
+//       });
+//     } catch (error) {
+//       dispatch({
+//         type: actionTypes.ASSIGNED_ISSUE_TO_USER_FAILURE,
+//         error: error.message,
+//       });
+//     }
+//   };
+// };
+
+export const assignedUserToIssue = ({ issueId, userId, projectId }) => {
   return async (dispatch) => {
     dispatch({ type: actionTypes.ASSIGNED_ISSUE_TO_USER_REQUEST });
     try {
       const response = await api.put(
         `/api/issues/${issueId}/assignee/${userId}`
       );
-      console.log("assigned issue", response.data);
       dispatch({
         type: actionTypes.ASSIGNED_ISSUE_TO_USER_SUCCESS,
         issue: response.data,
       });
+
+      // Refresh issue list
+      dispatch(fetchIssues(projectId));
     } catch (error) {
       dispatch({
         type: actionTypes.ASSIGNED_ISSUE_TO_USER_FAILURE,
@@ -111,4 +155,47 @@ export const deleteIssue = (issueId) => {
       });
     }
   };
+};
+
+// export const updateIssue = (updatedData) => {
+//   return async (dispatch) => {
+//     dispatch({ type: actionTypes.UPDATE_ISSUE_REQUEST });
+
+//     try {
+//       const response = await api.put(
+//         `/api/issues/${updatedData.id}`,
+//         updatedData
+//       );
+//       console.log("Issue updated successfully", response.data);
+
+//       dispatch({
+//         type: actionTypes.UPDATE_ISSUE_SUCCESS,
+//         issue: response.data,
+//       });
+
+//       // Optional: if you're showing a list of issues, re-fetch them here
+//       // dispatch(fetchIssues(updatedData.projectId)); // If you have projectId
+//     } catch (error) {
+//       dispatch({
+//         type: actionTypes.UPDATE_ISSUE_FAILURE,
+//         error: error.message,
+//       });
+//     }
+//   };
+// };
+
+export const updateIssue = (data) => async (dispatch) => {
+  dispatch({ type: actionTypes.UPDATE_ISSUE_REQUEST });
+  try {
+    const res = await api.put(`/api/issues/${data.id}`, data);
+    dispatch({ type: actionTypes.UPDATE_ISSUE_SUCCESS, issue: res.data });
+
+    // Immediately refresh all issues of the project
+    dispatch(fetchIssues(data.projectId));
+  } catch (error) {
+    dispatch({
+      type: actionTypes.UPDATE_ISSUE_FAILURE,
+      error: error.message || "Failed to update issue",
+    });
+  }
 };

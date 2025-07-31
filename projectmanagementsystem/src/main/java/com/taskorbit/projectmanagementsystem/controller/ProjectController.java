@@ -95,14 +95,21 @@ public class ProjectController {
     }
 
     @PostMapping("/invite")
-    public ResponseEntity<MessageResponse>inviteProject(@RequestBody InviteRequest req, @RequestHeader("Authorization") String jwt) throws Exception {
+    public ResponseEntity<MessageResponse> inviteProject(@RequestBody InviteRequest req, @RequestHeader("Authorization") String jwt) throws Exception {
+        User inviter = userService.findUserProfileByJwt(jwt);
 
-        User user = userService.findUserProfileByJwt(jwt);
+        // Check if user with email exists
+        User userToInvite = userService.findUserByEmail(req.getEmail());
+        if (userToInvite == null) {
+            return new ResponseEntity<>(new MessageResponse("User with email does not exist"), HttpStatus.NOT_FOUND);
+        }
+
         invitationService.sendInvitation(req.getEmail(), req.getProjectId());
-        MessageResponse res = new MessageResponse("User invitation sent successfully");
 
+        MessageResponse res = new MessageResponse("User invitation sent successfully");
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
+
 
     @GetMapping("/accept_invitation")
     public ResponseEntity<Invitation>acceptInviteProject(@RequestParam String token, @RequestHeader("Authorization") String jwt) throws Exception {

@@ -88,8 +88,10 @@ export const inviteToProject =
       });
       console.log("invite to project", data);
       dispatch({ type: INVITE_TO_PROJECT_SUCCESSS, payload: data });
+      return Promise.resolve(data); // ✅ return success
     } catch (error) {
       console.log("error", error);
+      return Promise.reject(error); // ✅ return failure
     }
   };
 

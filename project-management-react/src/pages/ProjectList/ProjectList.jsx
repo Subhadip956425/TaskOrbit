@@ -12,23 +12,7 @@ import { Input } from "@/components/ui/input";
 import ProjectCard from "../Project/ProjectCard";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProjects, searchProjects } from "../Redux/Project/Action";
-
-export const tags = [
-  "all",
-  "javascript",
-  "react",
-  "next-js",
-  "node-js",
-  "spring boot",
-  "mysql",
-  "postgesql",
-  "mongodb",
-  "angular",
-  "python",
-  "flask",
-  "django",
-  "docker",
-];
+import { tags } from "@/constants/tags";
 
 const ProjectList = () => {
   const { project } = useSelector((store) => store);

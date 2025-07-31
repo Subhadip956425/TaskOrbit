@@ -42,4 +42,9 @@ public class Issue {
     @JsonIgnore
     @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
+
+    @ManyToOne
+    @JsonIgnore
+    private User createdBy;
+
 }

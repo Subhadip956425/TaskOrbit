@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/select";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { tags } from "../ProjectList/ProjectList";
+import { tags } from "@/constants/tags";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { useDispatch } from "react-redux";
 import { createProject } from "../Redux/Project/Action";
