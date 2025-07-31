@@ -38,7 +38,7 @@ const ProjectCard = ({ item }) => {
             </div>
             <div>
               <DropdownMenu>
-                <DropdownMenuTrigger>
+                <DropdownMenuTrigger asChild>
                   <Button className="rounded-full" variant="ghost" size="icon">
                     <DotsVerticalIcon />
                   </Button>
