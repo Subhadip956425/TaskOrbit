@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { DialogClose } from "@/components/ui/dialog";
 import {
@@ -15,38 +16,52 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import React from "react";
+import { Cross1Icon } from "@radix-ui/react-icons";
 import { useForm } from "react-hook-form";
 import { tags } from "@/constants/tags";
-import { Cross1Icon } from "@radix-ui/react-icons";
 import { useDispatch } from "react-redux";
 import { createProject } from "../Redux/Project/Action";
 
 const CreateProjectForm = () => {
   const dispatch = useDispatch();
-
-  const handleTagsChange = (newValue) => {
-    const currentTags = form.getValues("tags");
-
-    const updatedTags = currentTags.includes(newValue)
-      ? currentTags.filter((tag) => tag !== newValue)
-      : [...currentTags, newValue];
-
-    form.setValue("tags", updatedTags);
-  };
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [projectCreated, setProjectCreated] = useState(false); // used to conditionally render DialogClose
 
   const form = useForm({
     defaultValues: {
       name: "",
       description: "",
       category: "",
-      tags: ["javascript", "react"],
+      tags: [],
     },
   });
 
-  const onSubmit = (data) => {
-    dispatch(createProject(data));
-    console.log("Create project data", data);
+  const { reset } = form;
+
+  const handleTagsChange = (newValue) => {
+    const currentTags = form.getValues("tags");
+    const updatedTags = currentTags.includes(newValue)
+      ? currentTags.filter((tag) => tag !== newValue)
+      : [...currentTags, newValue];
+
+    form.setValue("tags", updatedTags, { shouldValidate: true });
+  };
+
+  const onSubmit = async (data) => {
+    setErrorMessage("");
+    setSuccessMessage("");
+
+    try {
+      await dispatch(createProject(data)); // assume this is async and throws on error
+
+      setSuccessMessage("Project created successfully.");
+      setProjectCreated(true);
+      reset();
+    } catch (err) {
+      setErrorMessage("Failed to create project. Please try again.");
+      setProjectCreated(false);
+    }
   };
 
   return (
@@ -56,6 +71,7 @@ const CreateProjectForm = () => {
           <FormField
             control={form.control}
             name="name"
+            rules={{ required: "Project name is required" }}
             render={({ field }) => (
               <FormItem>
                 <FormControl>
@@ -63,7 +79,7 @@ const CreateProjectForm = () => {
                     {...field}
                     type="text"
                     className="border w-full border-gray-700 py-5 px-5"
-                    placeholder="project name..."
+                    placeholder="Project name..."
                   />
                 </FormControl>
                 <FormMessage />
@@ -74,6 +90,7 @@ const CreateProjectForm = () => {
           <FormField
             control={form.control}
             name="description"
+            rules={{ required: "Project description is required" }}
             render={({ field }) => (
               <FormItem>
                 <FormControl>
@@ -81,7 +98,7 @@ const CreateProjectForm = () => {
                     {...field}
                     type="text"
                     className="border w-full border-gray-700 py-5 px-5"
-                    placeholder="project description..."
+                    placeholder="Project description..."
                   />
                 </FormControl>
                 <FormMessage />
@@ -92,16 +109,15 @@ const CreateProjectForm = () => {
           <FormField
             control={form.control}
             name="category"
+            rules={{ required: "Category is required" }}
             render={({ field }) => (
               <FormItem>
                 <FormControl>
                   <Select
-                    defaultValue="fullstack"
                     value={field.value}
                     onValueChange={(value) => {
                       field.onChange(value);
                     }}
-                    // className="border w-full border-gray-700 py-5 px-5"
                   >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Category" />
@@ -121,16 +137,14 @@ const CreateProjectForm = () => {
           <FormField
             control={form.control}
             name="tags"
+            rules={{
+              validate: (value) =>
+                value.length > 0 || "At least one tag must be selected",
+            }}
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Select
-                    // value={field.value}
-                    onValueChange={(value) => {
-                      handleTagsChange(value);
-                    }}
-                    // className="border w-full border-gray-700 py-5 px-5"
-                  >
+                  <Select onValueChange={handleTagsChange}>
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Tags" />
                     </SelectTrigger>
@@ -161,20 +175,28 @@ const CreateProjectForm = () => {
             )}
           />
 
-          <DialogClose>
-            {false ? (
-              <div>
-                <p>
-                  You can create only 3 projects with free plan, please upgrade
-                  your plan
-                </p>
-              </div>
-            ) : (
+          {/* Error or Success message */}
+          {errorMessage && (
+            <p className="text-red-500 text-sm text-center">{errorMessage}</p>
+          )}
+          {successMessage && (
+            <p className="text-green-600 text-sm text-center">
+              {successMessage}
+            </p>
+          )}
+
+          {/* Conditionally render DialogClose only after success */}
+          {projectCreated ? (
+            <DialogClose asChild>
               <Button type="submit" className="w-full mt-5">
                 Create Project
               </Button>
-            )}
-          </DialogClose>
+            </DialogClose>
+          ) : (
+            <Button type="submit" className="w-full mt-5">
+              Create Project
+            </Button>
+          )}
         </form>
       </Form>
     </div>
