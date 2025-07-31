@@ -53,10 +53,18 @@ export const login =
       );
 
       if (data.jwt) {
-        localStorage.setItem("jwt", data.jwt);
+        // localStorage.setItem("jwt", data.jwt);
+
+        const token = data.jwt;
+        localStorage.setItem("jwt", token);
+
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
         dispatch({ type: LOGIN_SUCCESS, payload: data });
         setSuccessMessage("Login successful");
       }
+
+      dispatch(getUser());
 
       console.log("Login success", data);
     } catch (error) {
