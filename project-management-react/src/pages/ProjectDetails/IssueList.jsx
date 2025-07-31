@@ -47,7 +47,7 @@ const IssueList = ({ title, status }) => {
             </div>
           </CardContent>
           <CardFooter>
-            <DialogTrigger>
+            <DialogTrigger asChild>
               <Button
                 variant="outline"
                 className="w-full flex items-center gap-2"
